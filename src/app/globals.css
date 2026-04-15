@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Apple-Inspired Palette */
+  --bg: #FFFFFF;
+  --bg-alt: #F5F5F7;
+  --bg-card: #FFFFFF;
+  --surface: #FBFBFD;
+  --border: #D2D2D7;
+  --border-light: #E8E8ED;
+
+  /* Text — Apple hierarchy */
+  --text-primary: #1D1D1F;
+  --text-secondary: #424245;
+  --text-body: #6E6E73;
+  --text-muted: #86868B;
+  --text-light: #AEAEB2;
+
+  /* Brand Accents */
+  --brand-orange: #E8720C;
+  --brand-orange-light: #F59E0B;
+  --brand-green: #34C759;
+  --brand-green-dark: #248A3D;
+  --brand-blue: #0071E3;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* Custom scrollbar — minimal */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D2D2D7; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #AEAEB2; }
+
+/* Selection */
+::selection { background: #E8720C22; color: #1D1D1F; }
+
+/* Focus visible */
+:focus-visible { outline: 2px solid var(--brand-orange); outline-offset: 2px; border-radius: 4px; }
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #1D1D1F;
+  }
+}
+
+@layer components {
+  /* Primary Button — Solid black Apple-style */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm
+    bg-[#1D1D1F] text-white
+    hover:bg-[#424245] transition-all duration-200
+    hover:-translate-y-[1px] hover:shadow-lg
+    focus-visible:ring-2 focus-visible:ring-[#E8720C];
+  }
+
+  /* Secondary Button — Outlined */
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm
+    bg-transparent border-2 border-[#1D1D1F] text-[#1D1D1F]
+    hover:bg-[#1D1D1F] hover:text-white transition-all duration-200;
+  }
+
+  /* WhatsApp Button */
+  .btn-whatsapp {
+    @apply inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm
+    bg-[#25D366] text-white hover:bg-[#1EA855] transition-all duration-200
+    hover:shadow-lg hover:-translate-y-[1px];
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-[#E8720C]
+    hover:bg-[#E8720C]/5 transition-all duration-200;
+  }
+
+  /* Cards — Clean white with subtle shadow */
+  .card {
+    @apply bg-white rounded-2xl p-6 border border-[#E8E8ED]
+    hover:shadow-xl hover:border-[#D2D2D7] transition-all duration-300;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-xl border border-[#E8E8ED] rounded-2xl;
+  }
+
+  /* Section headings */
+  .section-label {
+    @apply inline-flex items-center gap-2 text-[#E8720C] text-xs font-bold
+    tracking-[0.2em] uppercase mb-6 sm:mb-8;
+  }
+
+  .section-title {
+    @apply font-extrabold text-3xl sm:text-[2.75rem] md:text-[3.5rem] text-[#1D1D1F] leading-[1.25] sm:leading-[1.2] tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply text-lg md:text-xl text-[#6E6E73] leading-[1.7] font-normal mt-6 sm:mt-8;
+  }
+
+  /* Input — Clean Apple style */
+  .input {
+    @apply w-full px-5 py-3.5 rounded-xl bg-[#F5F5F7] border border-[#E8E8ED]
+    text-[#1D1D1F] placeholder-[#AEAEB2] text-sm font-medium
+    focus:outline-none focus:border-[#E8720C] focus:ring-2 focus:ring-[#E8720C]/20
+    transition-all duration-200;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+  }
+
+  .badge-green { @apply badge bg-[#34C759]/10 text-[#248A3D] border border-[#34C759]/20; }
+  .badge-gold { @apply badge bg-[#E8720C]/10 text-[#E8720C] border border-[#E8720C]/20; }
+  .badge-red { @apply badge bg-red-50 text-red-600 border border-red-200; }
+  .badge-blue { @apply badge bg-blue-50 text-blue-600 border border-blue-200; }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-[#E8720C] to-[#F59E0B]
+    bg-clip-text text-transparent;
+  }
+}
+
+/* Hero glow — very subtle warm radial */
+.hero-glow {
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232, 114, 12, 0.04), transparent 60%);
+}
+
+/* Line clamp utilities */
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Prose styles for blog - Apple Style */
+.prose-apple {
+  @apply text-[#424245] leading-relaxed;
+}
+.prose-apple h2 { @apply font-bold text-xl sm:text-2xl text-[#1D1D1F] mt-8 mb-4 tracking-tight; }
+.prose-apple h3 { @apply font-semibold text-lg sm:text-xl text-[#1D1D1F] mt-6 mb-3 tracking-tight; }
+.prose-apple p { @apply mb-5; }
+.prose-apple a { @apply text-[#E8720C] hover:underline decoration-2 underline-offset-4 font-semibold; }
+.prose-apple ul { @apply list-disc list-inside mb-5 space-y-2; }
+.prose-apple ol { @apply list-decimal list-inside mb-5 space-y-2; }
+.prose-apple strong { @apply text-[#1D1D1F] font-bold; }
+.prose-apple blockquote { @apply border-l-4 border-[#E8720C] pl-6 italic my-8 text-[#6E6E73] text-lg; }
+.prose-apple img { @apply rounded-2xl shadow-sm my-8; }

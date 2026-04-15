@@ -1,0 +1,1 @@
+export { NextGenSection } from './HomeSections'
