@@ -4,19 +4,14 @@ import { HeroSection } from '@/components/home/HeroSection'
 import { TrustBar } from '@/components/home/TrustBar'
 import { ProblemSection } from '@/components/home/ProblemSection'
 import { DifferentiatorGrid } from '@/components/home/DifferentiatorGrid'
-import { CoverageSection } from '@/components/home/CoverageSection'
-import { NextGenSection } from '@/components/home/NextGenSection'
-import { WarehouseSection } from '@/components/home/WarehouseSection'
-import { FounderSection } from '@/components/home/FounderSection'
+import { CoverageSection, NextGenSection, WarehouseSection, FounderSection, FAQSection, FinalCTA } from '@/components/home/HomeSections'
 import FeaturedPropertiesList from '@/components/home/FeaturedPropertiesList'
-import { FAQSection } from '@/components/home/FAQSection'
-import { FinalCTA } from '@/components/home/FinalCTA'
 import { Suspense } from 'react'
 import { FeaturedPropertiesSkeleton } from '@/components/home/PropertySkeleton'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[#0A0A0A]">
       <Navbar />
       <HeroSection />
       <TrustBar />

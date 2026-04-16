@@ -68,47 +68,63 @@ export function LeadMagnetPopup() {
     <AnimatePresence>
       {isVisible && (
         <>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={() => setIsVisible(false)} />
-          <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[120] bg-[#09090B]/90 backdrop-blur-xl" onClick={() => setIsVisible(false)} />
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="fixed inset-0 z-[130] flex items-center justify-center p-4 xl:p-0 pointer-events-none">
             <div className="relative w-full max-w-md pointer-events-auto" role="dialog" aria-modal="true">
-              <div className="bg-white rounded-3xl shadow-apple-xl border border-[#E8E8ED] overflow-hidden">
-                <div className="p-8">
-                  <button onClick={() => setIsVisible(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-[#AEAEB2] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] transition-all" aria-label="Close"><X size={16} /></button>
+              <div className="bg-[#111113]/90 backdrop-blur-2xl border border-[#10B981]/30 rounded-[2rem] shadow-[0_0_50px_rgba(16,185,129,0.15)] overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[#10B981]/15 rounded-full blur-[64px] -z-10 pointer-events-none" />
+                
+                <div className="p-8 sm:p-10 relative z-10">
+                  <button onClick={() => setIsVisible(false)} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full text-[#71717A] hover:text-[#FAFAFA] hover:bg-[#18181B] border border-transparent hover:border-[#27272A] transition-all" aria-label="Close"><X size={18} /></button>
 
                   {!isSubmitted ? (
                     <>
                       <div className="mb-6">
-                        <div className="inline-flex items-center gap-2 bg-[#F5F5F7] text-[#6E6E73] text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4">Free — No Obligation</div>
-                        <h2 className="font-extrabold text-2xl text-[#1D1D1F] leading-tight mb-2 tracking-tight">
-                          Get your free<br /><span className="gradient-text">plot shortlist</span> in 2 hours
+                        <div className="inline-flex items-center gap-2 bg-[#09090B]/60 backdrop-blur border border-[#10B981]/20 text-[#10B981] text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-5 font-mono shadow-sm">Free Advisory</div>
+                        <h2 className="font-serif font-bold text-2xl sm:text-3xl text-[#FAFAFA] leading-tight mb-3">
+                          Get your free<br /><span className="gradient-text italic">plot shortlist</span> in 2 hours
                         </h2>
-                        <p className="text-sm text-[#86868B]">Tell us what you need. We&apos;ll WhatsApp you verified options with landed-cost breakdown.</p>
+                        <p className="text-sm text-[#A1A1AA] leading-relaxed font-sans mt-4">Tell us what you need. We'll WhatsApp you verified options with a complete landed-cost breakdown.</p>
                       </div>
                       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
-                          <input {...register('name')} placeholder="Your Full Name" className="input" autoComplete="name" />
-                          {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
+                        <div className="relative group">
+                          <input {...register('name')} placeholder="Your Full Name" className="w-full px-5 py-4 rounded-xl bg-[#09090B]/60 backdrop-blur border border-[#27272A] text-[#FAFAFA] placeholder-[#71717A] text-sm focus:outline-none focus:border-[#10B981] transition-colors" autoComplete="name" />
+                          {errors.name && <p className="text-[10px] text-red-500 mt-1 absolute -bottom-5">{errors.name.message}</p>}
+                        </div>
+                        <div className="relative group">
+                          <div className="relative">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#10B981] text-sm font-mono font-bold">+91</span>
+                            <input {...register('whatsapp')} placeholder="WhatsApp Number" type="tel" className="w-full pl-12 pr-5 py-4 rounded-xl bg-[#09090B]/60 backdrop-blur border border-[#27272A] text-[#FAFAFA] placeholder-[#71717A] text-sm focus:outline-none focus:border-[#10B981] transition-colors" maxLength={10} autoComplete="tel" />
+                          </div>
+                          {errors.whatsapp && <p className="text-[10px] text-red-500 mt-1 absolute -bottom-5">{errors.whatsapp.message}</p>}
+                        </div>
+                        <div className="relative pt-2">
+                          <select {...register('industry')} className="w-full px-5 py-4 rounded-xl bg-[#09090B]/60 backdrop-blur border border-[#27272A] text-[#A1A1AA] text-sm appearance-none focus:outline-none focus:border-[#10B981] cursor-pointer transition-colors">
+                             <option value="" className="bg-[#111113]">Industry (Optional)</option>{INDUSTRIES.map(i => <option key={i} value={i} className="bg-[#111113]">{i}</option>)}
+                          </select>
+                          <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#10B981] pointer-events-none" />
                         </div>
                         <div className="relative">
-                          <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[#AEAEB2] text-sm">+91</span>
-                          <input {...register('whatsapp')} placeholder="WhatsApp Number" type="tel" className="input pl-14" maxLength={10} autoComplete="tel" />
-                          {errors.whatsapp && <p className="text-xs text-red-500 mt-1">{errors.whatsapp.message}</p>}
+                           <select {...register('preferred_state')} className="w-full px-5 py-4 rounded-xl bg-[#09090B]/60 backdrop-blur border border-[#27272A] text-[#A1A1AA] text-sm appearance-none focus:outline-none focus:border-[#10B981] cursor-pointer transition-colors">
+                             <option value="" className="bg-[#111113]">Preferred State (Optional)</option>{STATES.map(s => <option key={s} value={s} className="bg-[#111113]">{s}</option>)}
+                           </select>
+                           <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#10B981] pointer-events-none" />
                         </div>
-                        <select {...register('industry')} className="input appearance-none"><option value="">Industry (Optional)</option>{INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}</select>
-                        <select {...register('preferred_state')} className="input appearance-none"><option value="">Preferred State (Optional)</option>{STATES.map(s => <option key={s} value={s}>{s}</option>)}</select>
-                        <button type="submit" disabled={isSubmitting} className="btn-primary w-full justify-center py-4 text-base">
-                          {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Submitting...</> : 'Get My Free Plot Shortlist'}
+                        <button type="submit" disabled={isSubmitting} className="btn-primary w-full justify-center h-14 mt-4 shadow-[0_4px_20px_rgba(16,185,129,0.2)]">
+                          {isSubmitting ? <><Loader2 size={16} className="animate-spin mr-2" /> Submitting...</> : 'Get My Free Plot Shortlist'}
                         </button>
-                        <p className="text-xs text-[#AEAEB2] text-center">No spam. One WhatsApp from a senior advisor.</p>
+                        <p className="text-[10px] text-[#71717A] text-center font-mono uppercase tracking-wide mt-3">No spam. One WhatsApp from a senior advisor.</p>
                       </form>
                     </>
                   ) : (
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-4">
-                      <div className="w-16 h-16 bg-[#34C759]/10 rounded-full flex items-center justify-center mx-auto mb-4"><CheckCircle2 className="text-[#34C759]" size={32} /></div>
-                      <h3 className="font-bold text-xl text-[#1D1D1F] mb-2">Got it, {submittedData?.name?.split(' ')[0]}!</h3>
-                      <p className="text-sm text-[#86868B] mb-6">Our advisor will WhatsApp you within 2 hours.</p>
-                      <a href={waLink} target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full justify-center py-4"><MessageCircle size={18} /> Send a Quick WhatsApp</a>
-                      <button onClick={() => setIsVisible(false)} className="btn-ghost w-full justify-center mt-3 text-xs">Close</button>
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-6">
+                      <div className="w-16 h-16 bg-[#25D366]/10 rounded-full flex items-center justify-center mx-auto mb-5 border border-[#25D366]/30">
+                         <CheckCircle2 size={32} className="text-[#25D366]" />
+                      </div>
+                      <h3 className="font-serif font-bold text-2xl text-[#FAFAFA] mb-2">Got it, {submittedData?.name?.split(' ')[0]}!</h3>
+                      <p className="text-sm text-[#A1A1AA] mb-8 font-sans">Our advisor will WhatsApp you within 2 hours.</p>
+                      <a href={waLink} target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full justify-center h-12 shadow-[0_4px_20px_rgba(37,211,102,0.2)]"><MessageCircle size={18} /> Send a Quick WhatsApp</a>
+                      <button onClick={() => setIsVisible(false)} className="btn-ghost w-full justify-center mt-4 text-xs">Close Window</button>
                     </motion.div>
                   )}
                 </div>

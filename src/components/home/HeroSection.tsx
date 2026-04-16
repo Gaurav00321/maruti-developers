@@ -1,188 +1,186 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { ArrowRight, CheckCircle, Phone, ChevronDown, Loader2, MessageCircle } from 'lucide-react'
+import { ArrowRight, Phone, MessageCircle, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 
-const schema = z.object({
-  name: z.string().min(2, 'Enter your name'),
-  whatsapp: z.string().regex(/^[6-9]\d{9}$/, 'Valid 10-digit number'),
-})
-type FormData = z.infer<typeof schema>
+const heroImages = [
+  '/images/gallery-images/23.jpg',
+  '/images/gallery-images/24.jpg',
+  '/images/gallery-images/25.jpg',
+  '/images/gallery-images/26.jpg',
+  '/images/gallery-images/27.jpg',
+]
 
-const trustItems = [
-  '25+ Years in Indian Industrial Real Estate',
-  'Pan-India Coverage · Local Verified Experts',
-  'RERA-Compliant Transactions',
-  'Direct Owner Deals — No Layered Broker Chain',
+const stats = [
+  { num: '25+', label: 'Years Experience' },
+  { num: '2,500+', label: 'Happy Clients' },
+  { num: '7+', label: 'States Covered' },
+  { num: '99%', label: 'Client Satisfaction' },
 ]
 
 export function HeroSection() {
+  const [currentSlide, setCurrentSlide] = useState(0)
   const [mounted, setMounted] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  })
+  const nextSlide = useCallback(() => {
+    setCurrentSlide(prev => (prev + 1) % heroImages.length)
+  }, [])
 
-  // Animation variants to simplify
-  const fadeInUp = {
-    initial: { opacity: mounted ? 0 : 1, y: mounted ? 20 : 0 },
+  const prevSlide = useCallback(() => {
+    setCurrentSlide(prev => (prev - 1 + heroImages.length) % heroImages.length)
+  }, [])
+
+  // Auto-rotate every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 4000)
+    return () => clearInterval(interval)
+  }, [nextSlide])
+
+  const fadeIn = {
+    initial: { opacity: mounted ? 0 : 1, y: mounted ? 30 : 0 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 }
-  }
-
-  const onSubmit = async (data: FormData) => {
-    try {
-      await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, source: 'hero' }),
-      })
-    } catch {}
-    setSubmitted(true)
-    if ((window as any).gtag) {
-      ;(window as any).gtag('event', 'lead_submit', { source: 'hero' })
-    }
   }
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-20 sm:pt-24 pb-10 sm:pb-16 bg-white">
-      {/* Subtle warm glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[800px] h-[300px] sm:h-[400px] bg-gradient-to-b from-[#E8720C]/[0.03] to-transparent rounded-full blur-3xl pointer-events-none" />
+    <section className="relative h-[100svh] w-full overflow-hidden">
+      {/* Background Image Slides */}
+      {heroImages.map((img, i) => (
+        <div
+          key={i}
+          className={`hero-slide ${i === currentSlide ? 'active' : ''}`}
+          style={{ backgroundImage: `url(${img})` }}
+        />
+      ))}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-          {/* Left — Copy */}
-          <div>
+      {/* Dark Overlay */}
+      <div className="hero-overlay" />
+
+      {/* Emerald accent line at top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#10B981] to-transparent z-20 opacity-40" />
+
+      {/* Content */}
+      <div className="relative z-10 h-full flex flex-col justify-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full pt-20">
+          <div className="max-w-4xl">
+            {/* Label */}
             <motion.div
-              {...fadeInUp}
-              className="inline-flex items-center gap-2 bg-[#F5F5F7] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-5 sm:mb-8"
+              {...fadeIn}
+              transition={{ duration: 0.6 }}
+              className="flex items-center gap-3 mb-6 lg:mb-8"
             >
-              <span className="w-2 h-2 rounded-full bg-[#34C759]" />
-              <span className="text-[#6E6E73] text-[10px] sm:text-xs font-semibold tracking-wide uppercase">
-                Since 1998 · 2,500+ Clients · Pan-India
+              <span className="text-[#10B981] font-mono text-sm font-medium">01</span>
+              <span className="w-8 h-[1px] bg-[#10B981]" />
+              <span className="text-[#10B981] text-xs font-semibold tracking-[0.2em] uppercase font-sans">
+                Industrial Real Estate
               </span>
             </motion.div>
 
+            {/* Heading */}
             <motion.h1
-              {...fadeInUp}
-              transition={{ duration: 0.5, delay: 0.08 }}
-              className="font-extrabold text-[2rem] sm:text-[3rem] md:text-[3.5rem] lg:text-[4rem] text-[#1D1D1F] leading-[1.2] sm:leading-[1.1] tracking-tight mb-4 sm:mb-6"
+              {...fadeIn}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="font-serif font-bold text-[2.75rem] sm:text-[4rem] md:text-[5rem] lg:text-[5.5rem] text-[#FAFAFA] leading-[1.05] tracking-tight mb-6 lg:mb-8 text-shadow-xl"
             >
-              Industrial Land.{' '}
-              <span className="gradient-text">Warehouses.</span>{' '}
-              Commercial Property.
+              Building Industrial{' '}
+              <span className="gradient-text italic">Dreams,</span>{' '}
+              One Property at a Time
             </motion.h1>
 
+            {/* Subtitle */}
             <motion.p
-              {...fadeInUp}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="text-[#424245] text-base sm:text-xl leading-relaxed mb-3 sm:mb-4 font-normal"
+              {...fadeIn}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-[#A1A1AA] text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-8 lg:mb-12 max-w-2xl font-sans"
             >
-              Across India — without the broker games, black-money traps, or &quot;proposed NA&quot; regret.
-            </motion.p>
-            <motion.p
-              {...fadeInUp}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-[#86868B] text-sm sm:text-base leading-relaxed mb-6 sm:mb-10"
-            >
-              Gujarat · Maharashtra · Rajasthan · Tamil Nadu · Karnataka · NCR · Telangana.
+              We connect businesses with their perfect industrial spaces through professional support & expertise across India.
             </motion.p>
 
-            {/* Trust strip — hidden on mobile, shown on sm+ */}
-            <motion.div initial={{ opacity: mounted ? 0 : 1 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="hidden sm:flex flex-col gap-3 mb-10">
-              {trustItems.map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <CheckCircle size={16} className="text-[#34C759] flex-shrink-0" />
-                  <span className="text-sm text-[#6E6E73] font-medium">{item}</span>
-                </div>
-              ))}
+            {/* CTAs */}
+            <motion.div
+              {...fadeIn}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-4 mb-8"
+            >
+              <Link href="/properties" className="btn-primary py-4 px-8 text-sm sm:text-base justify-center sm:justify-start">
+                Explore Properties <ArrowRight size={18} />
+              </Link>
+              <Link href="#services" className="btn-secondary py-4 px-8 text-sm sm:text-base justify-center sm:justify-start">
+                Our Services
+              </Link>
             </motion.div>
 
-            <motion.div initial={{ opacity: mounted ? 0 : 1 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <a href="tel:+919898610678" className="btn-secondary py-3 sm:py-3.5 justify-center sm:justify-start text-sm">
-                <Phone size={16} /> +91 98986 10678
+            {/* Quick contact */}
+            <motion.div
+              {...fadeIn}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex flex-col sm:flex-row gap-5"
+            >
+              <a href="tel:+919898610678" className="flex items-center gap-2 text-sm text-[#71717A] hover:text-[#10B981] transition-colors font-sans">
+                <Phone size={14} className="text-[#10B981]" /> +91 98986 10678
               </a>
-              <a href="https://wa.me/919898610678" target="_blank" rel="noopener noreferrer" className="btn-whatsapp py-3 sm:py-3.5 justify-center sm:justify-start text-sm">
-                <MessageCircle size={16} /> WhatsApp Now
+              <a href="https://wa.me/919898610678" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-[#71717A] hover:text-[#25D366] transition-colors font-sans">
+                <MessageCircle size={14} className="text-[#25D366]" /> WhatsApp Now
               </a>
             </motion.div>
           </div>
-
-          {/* Right — Lead Form */}
-          <motion.div {...fadeInUp} transition={{ duration: 0.5, delay: 0.15 }} className="relative">
-            <div className="bg-white border border-[#E8E8ED] rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl sm:shadow-2xl">
-              {!submitted ? (
-                <>
-                  <div className="mb-5 sm:mb-8">
-                    <h2 className="font-bold text-xl sm:text-2xl text-[#1D1D1F] mb-1.5 sm:mb-2 tracking-tight">
-                      Get My Free Plot Shortlist
-                    </h2>
-                    <p className="text-xs sm:text-sm text-[#86868B]">
-                      WhatsApp response in <span className="text-[#E8720C] font-semibold">2 hours</span> from a senior advisor
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
-                    <div>
-                      <input {...register('name')} placeholder="Your Full Name *" className="input" />
-                      {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
-                    </div>
-                    <div>
-                      <div className="relative">
-                        <span className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-[#AEAEB2] text-sm">+91</span>
-                        <input {...register('whatsapp')} placeholder="WhatsApp Number *" type="tel" className="input pl-12 sm:pl-14" maxLength={10} />
-                      </div>
-                      {errors.whatsapp && <p className="text-xs text-red-500 mt-1">{errors.whatsapp.message}</p>}
-                    </div>
-                    <button type="submit" disabled={isSubmitting} className="btn-primary w-full justify-center py-3.5 sm:py-4 text-sm sm:text-base">
-                      {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> Submitting...</> : <>Get My Free Plot Shortlist <ArrowRight size={16} /></>}
-                    </button>
-                  </form>
-
-                  <p className="text-[10px] sm:text-xs text-[#AEAEB2] text-center mt-4 sm:mt-5">
-                    No spam. One WhatsApp from a senior advisor. NRI? We&apos;ll handle it right.
-                  </p>
-                </>
-              ) : (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-4 sm:py-6">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#34C759]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="text-[#34C759]" size={28} />
-                  </div>
-                  <h3 className="font-bold text-lg sm:text-xl text-[#1D1D1F] mb-2">Thank you!</h3>
-                  <p className="text-xs sm:text-sm text-[#86868B] mb-5 sm:mb-6">Our senior advisor will WhatsApp you within 2 hours.</p>
-                  <a href="https://wa.me/919898610678" target="_blank" rel="noopener noreferrer" className="btn-whatsapp w-full justify-center py-3">
-                    <MessageCircle size={16} /> Send WhatsApp Now
-                  </a>
-                </motion.div>
-              )}
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-[#E8E8ED]">
-                {[['25+', 'Years'], ['2,500+', 'Clients'], ['7+', 'States']].map(([num, label]) => (
-                  <div key={label} className="text-center">
-                    <div className="font-extrabold text-[#1D1D1F] text-lg sm:text-2xl tracking-tight">{num}</div>
-                    <div className="text-[#AEAEB2] text-[10px] sm:text-xs font-medium">{label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
         </div>
-      </div>
 
-      {/* Scroll indicator — hidden on mobile */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2">
-        <span className="text-xs text-[#AEAEB2]">Scroll to explore</span>
-        <ChevronDown className="text-[#D2D2D7] animate-bounce" size={16} />
-      </motion.div>
+        {/* Stats Bar at Bottom */}
+        <motion.div
+          initial={{ opacity: mounted ? 0 : 1, y: mounted ? 20 : 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="absolute bottom-0 left-0 right-0 bg-[#09090B]/80 backdrop-blur-xl border-t border-[#27272A]"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+              {stats.map(({ num, label }) => (
+                <div key={label} className="text-center sm:text-left">
+                  <div className="font-serif font-bold text-[#10B981] text-2xl sm:text-3xl tracking-tight">{num}</div>
+                  <div className="text-[#71717A] text-xs sm:text-sm font-sans mt-1 uppercase tracking-wide font-semibold">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Slide Controls */}
+        <div className="absolute bottom-32 right-4 sm:right-8 z-20 flex items-center gap-3">
+          <button onClick={prevSlide} className="w-10 h-10 rounded-full border border-[#27272A] bg-[#09090B]/60 backdrop-blur-md flex items-center justify-center text-[#A1A1AA] hover:text-[#10B981] hover:border-[#10B981] transition-all">
+            <ChevronLeft size={18} />
+          </button>
+          <div className="flex gap-2">
+            {heroImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === currentSlide ? 'bg-[#10B981] w-6' : 'bg-[#3F3F46] hover:bg-[#71717A]'
+                }`}
+              />
+            ))}
+          </div>
+          <button onClick={nextSlide} className="w-10 h-10 rounded-full border border-[#27272A] bg-[#09090B]/60 backdrop-blur-md flex items-center justify-center text-[#A1A1AA] hover:text-[#10B981] hover:border-[#10B981] transition-all">
+            <ChevronRight size={18} />
+          </button>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="absolute bottom-32 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
+        >
+          <span className="text-xs text-[#71717A] font-sans tracking-wide uppercase">Scroll to explore</span>
+          <ChevronDown className="text-[#71717A] animate-bounce mt-1" size={16} />
+        </motion.div>
+      </div>
     </section>
   )
 }
